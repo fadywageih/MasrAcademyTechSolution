@@ -14,11 +14,7 @@
 
   <ItemGroup>
     <Folder Include="Common\Enum\" />
-    <Folder Include="Presistance\Data\Configurations\" />
     <Folder Include="Presistance\Data\Migrations\" />
-    <Folder Include="Presistance\Repositories\Generic\" />
-    <Folder Include="Presistance\Repositories\Users\" />
-    <Folder Include="Presistance\UnitOfWork\" />
   </ItemGroup>
 
 </Project>

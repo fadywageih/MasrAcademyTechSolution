@@ -1,23 +1,36 @@
+// Program.cs
+using MasrAcademyTech.BLL.Services.Activation;
+using MasrAcademyTech.BLL.Services.Courses;
 using MasrAcademyTech.BLL.Services.EmailSettings;
+using MasrAcademyTech.BLL.Services.Lessons;
+using MasrAcademyTech.BLL.Services.Payment;
+using MasrAcademyTech.BLL.Services.PaymentCallback;
 using MasrAcademyTech.DAL.Models.Identity;
 using MasrAcademyTech.DAL.Presistance.Data;
+using MasrAcademyTech.DAL.Presistance.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// إضافة secrets.json في Development
 if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddJsonFile("secrets.json", optional: true, reloadOnChange: true);
 }
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSession();
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IEmailSettings, EmailSettings>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddHttpClient<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IActivationService, ActivationService>();
+builder.Services.AddScoped<IPaymentCallbackService, PaymentCallbackService>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -52,11 +65,34 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
     var roles = new[] { "Admin", "Customer" };
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))
             await roleManager.CreateAsync(new IdentityRole(role));
+    }
+
+    var adminEmail = builder.Configuration["Admin:Email"];
+    var adminPassword = builder.Configuration["Admin:Password"];
+
+    if (!string.IsNullOrEmpty(adminEmail) && !string.IsNullOrEmpty(adminPassword))
+    {
+        var adminUser = await userManager.FindByEmailAsync(adminEmail);
+        if (adminUser == null)
+        {
+            adminUser = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                FullName = "System Admin",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            };
+            await userManager.CreateAsync(adminUser, adminPassword);
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
     }
 }
 
@@ -69,6 +105,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
