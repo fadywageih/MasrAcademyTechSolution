@@ -1,0 +1,106 @@
+﻿@model MasrAcademyTech.DAL.Models.Courses.Course
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <a asp-action="Courses" class="text-blue-200 hover:text-white transition text-sm mb-4 inline-block">
+                <i class="fas fa-arrow-right ml-2"></i> العودة للكورسات
+            </a>
+            <h1 class="text-3xl md:text-4xl font-extrabold animate-fade-in">@Model.Title</h1>
+        </div>
+    </section>
+
+    <div class="max-w-6xl mx-auto px-4 py-10">
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-8 animate-fade-in">
+                <!-- Image -->
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <div class="rounded-2xl overflow-hidden shadow-lg">
+                        <img src="@Model.ImagePath" alt="@Model.Title" class="w-full h-72 md:h-96 object-cover" />
+                    </div>
+                }
+
+                <!-- Description -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">وصف الكورس</h2>
+                    <p class="text-gray-600 leading-loose text-lg">@Model.FullDescription</p>
+                </div>
+
+                <!-- Lessons -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-list-ol text-blue-600 ml-2"></i>محتوى الكورس
+                    </h2>
+                    @if (Model.Lessons != null && Model.Lessons.Any())
+                    {
+                        <div class="space-y-3">
+                            @foreach (var lesson in Model.Lessons.OrderBy(l => l.Order))
+                            {
+                                <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-blue-50 transition">
+                                    <span class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-sm shrink-0">
+                                        @lesson.Order
+                                    </span>
+                                    <span class="font-medium text-gray-700">@lesson.Title</span>
+                                    <i class="fas fa-lock text-gray-300 mr-auto"></i>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-gray-400 text-center py-8">لم يتم إضافة حلقات بعد</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-6 animate-slide-in">
+                <!-- Price Card -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm sticky top-24">
+                    <div class="text-center mb-6">
+                        <p class="text-gray-500 mb-2">سعر الكورس</p>
+                        <p class="text-4xl font-extrabold text-blue-600">@Model.Price.ToString("C")</p>
+                        <div class="flex items-center justify-center gap-2 mt-2 text-gray-400 text-sm">
+                            <i class="fas fa-film"></i>
+                            <span>@(Model.Lessons?.Count ?? 0) حلقات</span>
+                        </div>
+                    </div>
+
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <a asp-action="Checkout" asp-route-id="@Model.Id"
+                           class="block w-full text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-2xl font-bold text-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5">
+                            <i class="fas fa-shopping-cart ml-2"></i> اشتري الآن
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Checkout", "Home", new { id = Model.Id })"
+                           class="block w-full text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-2xl font-bold text-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5">
+                            <i class="fas fa-sign-in-alt ml-2"></i> سجل دخول للشراء
+                        </a>
+                    }
+
+                    <!-- Features List -->
+                    <div class="mt-6 space-y-3 text-sm text-gray-600">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-500"></i> وصول مدى الحياة
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-500"></i> دعم فني مستمر
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-500"></i> شهادة إتمام
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<MasrAcademyTech.DAL.Models.Courses.Course>
+@{
+    ViewData["Title"] = "لوحة التحكم - الكورسات";
+}
+
+<div class="max-w-7xl mx-auto px-4 py-8 animate-fade-in">
+    <div class="flex justify-between items-center mb-8">
+        <h2 class="text-2xl font-bold text-gray-800">
+            <i class="fas fa-graduation-cap text-blue-600 ml-2"></i>إدارة الكورسات
+        </h2>
+        <div class="flex gap-2">
+            <a asp-action="Tickets" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm font-medium">
+                <i class="fas fa-ticket-alt ml-1"></i> تذاكر الدعم
+            </a>
+            <a asp-action="Create" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-all text-sm font-medium">
+                <i class="fas fa-plus ml-1"></i> إضافة كورس
+            </a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-16 bg-white rounded-xl shadow">
+            <i class="fas fa-book-open text-gray-300 text-5xl mb-4"></i>
+            <p class="text-gray-500">لا يوجد كورسات بعد</p>
+        </div>
+    }
+    else
+    {
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b">
+                    <tr>
+                        <th class="p-4 text-right text-sm font-medium text-gray-600">العنوان</th>
+                        <th class="p-4 text-right text-sm font-medium text-gray-600">السعر</th>
+                        <th class="p-4 text-right text-sm font-medium text-gray-600">التاريخ</th>
+                        <th class="p-4 text-center text-sm font-medium text-gray-600">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var course in Model)
+                    {
+                        <tr class="border-b hover:bg-gray-50 transition">
+                            <td class="p-4 font-medium">@course.Title</td>
+                            <td class="p-4">@course.Price.ToString("C")</td>
+                            <td class="p-4 text-gray-500">@course.CreatedAt.ToString("dd/MM/yyyy")</td>
+                            <td class="p-4 text-center">
+                                <a asp-action="Lessons" asp-route-id="@course.Id" class="text-green-600 hover:text-green-800 mx-2 text-sm">
+                                    <i class="fas fa-list"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@course.Id" class="text-blue-600 hover:text-blue-800 mx-2 text-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@course.Id" class="text-red-600 hover:text-red-800 mx-2 text-sm">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

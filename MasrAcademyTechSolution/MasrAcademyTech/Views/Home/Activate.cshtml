@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "تفعيل الكورس";
+}
+
+<div class="bg-gray-50 min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md animate-fade-in">
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-key text-blue-600 text-3xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800">تفعيل الكورس</h2>
+            <p class="text-gray-500 mt-2">أدخل كود التفعيل الذي وصلك</p>
+        </div>
+
+        <form asp-action="Activate" method="post" class="space-y-4">
+            @Html.AntiForgeryToken()
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="bg-red-50 text-red-600 p-3 rounded-xl text-sm text-center">
+                    @Html.ValidationSummary(false, "")
+                </div>
+            }
+
+            <input name="code"
+                   class="w-full border-2 border-gray-200 rounded-xl p-4 text-center text-3xl font-bold tracking-[8px] uppercase focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all"
+                   placeholder="XXXXXXXX"
+                   maxlength="8"
+                   autocomplete="off" />
+
+            <button type="submit"
+                    class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl">
+                <i class="fas fa-check ml-2"></i> تفعيل
+            </button>
+        </form>
+
+        <p class="text-center text-gray-400 text-sm mt-6">
+            لم يصلك الكود؟ <a asp-action="Support" class="text-blue-600 hover:underline">تواصل مع الدعم</a>
+        </p>
+    </div>
+</div>
