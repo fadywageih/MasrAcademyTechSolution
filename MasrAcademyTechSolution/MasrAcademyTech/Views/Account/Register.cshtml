@@ -1,0 +1,82 @@
+﻿@model MasrAcademyTech.Models.Account.RegisterViewModel
+@{
+    ViewData["Title"] = "تسجيل حساب جديد";
+}
+
+<div class="bg-gray-50 min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md animate-fade-in">
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-user-plus text-blue-600 text-3xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800">تسجيل حساب جديد</h2>
+            <p class="text-gray-500 mt-2">أنشئ حسابك وابدأ التعلم</p>
+        </div>
+
+        <form asp-action="Register" method="post" class="space-y-4">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm bg-red-50 p-3 rounded-xl"></div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">الاسم الكامل</label>
+                <div class="relative">
+                    <i class="fas fa-user absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input asp-for="FullName" class="w-full pr-10 pl-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="محمد أحمد" />
+                </div>
+                <span asp-validation-for="FullName" class="text-red-500 text-xs mt-1"></span>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">البريد الإلكتروني</label>
+                <div class="relative">
+                    <i class="fas fa-envelope absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input asp-for="Email" class="w-full pr-10 pl-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="example@email.com" />
+                </div>
+                <span asp-validation-for="Email" class="text-red-500 text-xs mt-1"></span>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">كلمة المرور</label>
+                <div class="relative">
+                    <i class="fas fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input asp-for="Password" class="w-full pr-10 pl-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="••••••••" />
+                </div>
+                <span asp-validation-for="Password" class="text-red-500 text-xs mt-1"></span>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">تأكيد كلمة المرور</label>
+                <div class="relative">
+                    <i class="fas fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input asp-for="ConfirmPassword" class="w-full pr-10 pl-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="••••••••" />
+                </div>
+                <span asp-validation-for="ConfirmPassword" class="text-red-500 text-xs mt-1"></span>
+            </div>
+
+            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3.5 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl">
+                تسجيل
+            </button>
+        </form>
+
+        <div class="relative my-6">
+            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
+            <div class="relative flex justify-center text-sm"><span class="px-3 bg-white text-gray-500">أو سجل باستخدام</span></div>
+        </div>
+
+        <form asp-action="ExternalLogin" asp-route-provider="Google" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="w-full flex items-center justify-center gap-3 border border-gray-300 py-3.5 rounded-xl hover:bg-gray-50 transition-all font-medium">
+                <i class="fab fa-google text-red-500 text-lg"></i>
+                <span>تسجيل الدخول بحساب Google</span>
+            </button>
+        </form>
+
+        <p class="text-center text-sm text-gray-500 mt-6">
+            لديك حساب بالفعل؟ <a asp-action="Login" class="text-blue-600 hover:text-blue-800 font-medium">تسجيل الدخول</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
