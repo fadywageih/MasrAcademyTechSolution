@@ -1,5 +1,0 @@
-<Solution>
-  <Project Path="MasrAcademyTech.BLL/MasrAcademyTech.BLL.csproj" />
-  <Project Path="MasrAcademyTech.DAL/MasrAcademyTech.DAL.csproj" />
-  <Project Path="MasrAcademyTech/MasrAcademyTech.csproj" />
-</Solution>
